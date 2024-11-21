@@ -1,0 +1,12 @@
+{
+  "AppSyncApiName": "salapermovil",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authsalapermovil7dbaeed1",
+      "Outputs.UserPoolId"
+    ]
+  },
+  "AuthModeLastUpdated": "2024-10-28T06:50:44.530Z"
+}

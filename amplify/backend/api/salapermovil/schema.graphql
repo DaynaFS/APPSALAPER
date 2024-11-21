@@ -1,0 +1,32 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+# input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+
+type Todo @model 
+@auth(rules: [
+  { allow: owner, operations: [create, update, delete] },  # El propietario puede crear, actualizar y eliminar
+  { allow: private, operations: [read] }                   # Otros usuarios autenticados solo pueden leer
+]) {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type Earthquake @model {
+  id: ID!
+  magnitude: Float!
+  location: String!
+  time: AWSDateTime!
+  reportedBy: String
+}
+
+type EarthquakeAlert @model {
+  id: ID!
+  tweetId: String! 
+  text: String! 
+  date: AWSDateTime! 
+  location: String 
+  magnitude: Float 
+  source: String 
+}
+
