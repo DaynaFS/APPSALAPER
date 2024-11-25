@@ -8,16 +8,17 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@aws-amplify/auth": "^6.6.2",
-    "@aws-amplify/core": "^6.5.3",
+    "@aws-amplify/auth": "^6.7.0",
+    "@aws-amplify/core": "^6.6.0",
     "@aws-amplify/react-native": "^1.1.6",
-    "@aws-amplify/storage": "^6.6.16",
+    "@aws-amplify/storage": "^6.7.0",
+    "@aws-amplify/ui-react-native": "^2.2.18",
     "@googlemaps/google-maps-services-js": "^3.4.0",
     "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native/metro-config": "^0.76.1",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
-    "aws-amplify": "^6.8.2",
+    "aws-amplify": "^6.9.0",
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "cors": "^2.8.5",
@@ -48,7 +49,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "metro-react-native-babel-transformer": "^0.77.0"
+    "metro-react-native-babel-transformer": "^0.77.0",
+    "tailwindcss": "^3.4.15"
   },
   "private": true
 }

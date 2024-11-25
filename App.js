@@ -14,7 +14,11 @@ import 'react-native-get-random-values';
 import AuthScreen from './AuthScreen';
 import fetchSSNData from './services/ssnFetchData'; // Importar fetchSSNData
 
+try {
 Amplify.configure(awsconfig);
+} catch (error){
+  console.error('Error al configurar Amplify:', error);
+}
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
