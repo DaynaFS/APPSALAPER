@@ -1,18 +1,22 @@
 //import React from 'react';
 //import { Text } from 'react-native';
+global.Buffer = global.Buffer || require('buffer').Buffer;
+global.process = require('process');
+
+
 import React, { useRef, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import awsconfig from './aws-exports';
-import { listTodos } from './src/graphql/queries';
-import { onCreateTodo } from './src/graphql/subscriptions';
+import awsconfig from '../aws-exports';
+import { listTodos } from '../src/graphql/queries';
+import { onCreateTodo } from '../src/graphql/subscriptions';
 import 'react-native-get-random-values';
+//import * as queries from '../src/graphql/queries';
 
-
-import AuthScreen from './AuthScreen';
-import fetchSSNData from './services/ssnFetchData'; // Importar fetchSSNData
+import AuthScreen from '../AuthScreen';
+import fetchSSNData from '../backend/services/ssnFetchData'; // Importar fetchSSNData
 
 try {
 Amplify.configure(awsconfig);
