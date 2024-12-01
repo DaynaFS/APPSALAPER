@@ -1,7 +1,7 @@
 //import React from 'react';
 //import { Text } from 'react-native';
-global.Buffer = global.Buffer || require('buffer').Buffer;
-global.process = require('process');
+//global.Buffer = global.Buffer || require('buffer').Buffer;
+//global.process = require('process');
 
 
 import React, { useRef, useEffect, useState } from 'react';

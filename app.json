@@ -2,10 +2,11 @@
   "expo": {
     "name": "SalaperMovil",
     "slug": "SalaperMovil",
-    "version": "1.0.0",
-    //"entryPoint": "./frontend/App.js",
+    "version": "52.0.0",
+    "platforms": [
+      "android"
+    ],
     "orientation": "portrait",
-    //"entryPoint": "./frontend/App.js"
     "icon": "./frontend/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -25,6 +26,12 @@
     },
     "web": {
       "favicon": "./frontend/assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "42042561-0198-4d27-8465-57e103adc005"
+      }
+    },
+    "owner": "daaayyfs"
   }
 }

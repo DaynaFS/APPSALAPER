@@ -12,10 +12,9 @@ const PORT = 3000;
 app.use(cors()); // Permitir CORS para solicitudes desde otras aplicaciones
 app.use(helmet()); // Protección básica de cabeceras HTTP
 
-// URL del feed RSS de SSN
+//RSS de SSN
 const rssFeedUrl = 'http://www.ssn.unam.mx/rss/ultimos-sismos.xml';
 
-// Función para procesar el feed y filtrar los eventos
 async function fetchAndFilterEarthquakes() {
   try {
     const feed = await parser.parseURL(rssFeedUrl);
