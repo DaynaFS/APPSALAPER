@@ -1,4 +1,5 @@
 import { registerRootComponent } from 'expo';
+import 'expo-dev-client';
 //import { AppRegistry } from 'react-native';
 import App from './frontend/App';
 //import { name as SalaperMovil } from './app.json';

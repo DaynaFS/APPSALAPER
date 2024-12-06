@@ -3,6 +3,9 @@ package com.appmovil.salaper
 import android.app.Application
 import android.content.res.Configuration
 
+import expo.modules.ApplicationLifecycleDispatcher
+import expo.modules.ReactNativeHostWrapper
+
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactNativeHost
@@ -12,8 +15,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
 
-import expo.modules.ApplicationLifecycleDispatcher
-import expo.modules.ReactNativeHostWrapper
+
 
 class MainApplication : Application(), ReactApplication {
 
@@ -26,7 +28,7 @@ class MainApplication : Application(), ReactApplication {
             return PackageList(this).packages
           }
 
-          override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"
+          override fun getJSMainModuleName(): String = "index"
 
           override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
 

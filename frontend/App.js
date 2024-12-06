@@ -12,11 +12,26 @@ import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import { listTodos } from '../src/graphql/queries';
 import { onCreateTodo } from '../src/graphql/subscriptions';
+import { Location } from './frontend/components/Location';
 import 'react-native-get-random-values';
 //import * as queries from '../src/graphql/queries';
 
 import AuthScreen from '../AuthScreen';
 import fetchSSNData from '../backend/services/ssnFetchData'; // Importar fetchSSNData
+import Constants from 'expo-constants';
+console.log(Constants.systemFonts)
+
+
+const App = () => {
+  return (
+    <View>
+      <Text> Bienvenido, esta app te alerta de los sismos ocurridos en la CDMX</Text>
+        <Location />       
+         </View>
+      
+  );
+  };
+
 
 try {
 Amplify.configure(awsconfig);

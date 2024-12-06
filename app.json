@@ -22,7 +22,8 @@
         "foregroundImage": "./frontend/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.appmovil.salaper"
+      "package": "com.appmovil.salaper",
+      "versionCode": 5
     },
     "web": {
       "favicon": "./frontend/assets/favicon.png"
