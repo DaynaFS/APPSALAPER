@@ -1,41 +1,21 @@
-//import React from 'react';
-//import { Text } from 'react-native';
-//global.Buffer = global.Buffer || require('buffer').Buffer;
-//global.process = require('process');
-
-
+// Importaciones necesarias
 import React, { useRef, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import { listTodos } from '../src/graphql/queries';
 import { onCreateTodo } from '../src/graphql/subscriptions';
 import { Location } from './frontend/components/Location';
-import 'react-native-get-random-values';
-//import * as queries from '../src/graphql/queries';
-
+import { createItemDB } from '../backend/services/apiService'; // Importar servicio para API
 import AuthScreen from '../AuthScreen';
 import fetchSSNData from '../backend/services/ssnFetchData'; // Importar fetchSSNData
-import Constants from 'expo-constants';
-console.log(Constants.systemFonts)
 
-
-const App = () => {
-  return (
-    <View>
-      <Text> Bienvenido, esta app te alerta de los sismos ocurridos en la CDMX</Text>
-        <Location />       
-         </View>
-      
-  );
-  };
-
-
+// Configurar Amplify
 try {
-Amplify.configure(awsconfig);
-} catch (error){
+  Amplify.configure(awsconfig);
+} catch (error) {
   console.error('Error al configurar Amplify:', error);
 }
 
@@ -45,12 +25,14 @@ export default function App() {
   const [earthquakes, setEarthquakes] = useState([]); // Estado para guardar los datos de sismos
   const mapRef = useRef(null);
 
+  // Verificar autenticación del usuario
   useEffect(() => {
     Auth.currentAuthenticatedUser()
       .then(() => setIsAuthenticated(true))
       .catch(() => setIsAuthenticated(false));
   }, []);
 
+  // Obtener datos de todos desde GraphQL
   const fetchTodos = async () => {
     try {
       const todoData = await API.graphql(graphqlOperation(listTodos));
@@ -60,7 +42,7 @@ export default function App() {
     }
   };
 
-  // Llama a fetchSSNData y guarda los datos en el estado earthquakes
+  // Obtener datos de sismos
   const fetchEarthquakes = async () => {
     try {
       const data = await fetchSSNData();
@@ -70,12 +52,7 @@ export default function App() {
     }
   };
 
-  useEffect(() => {
-    fetchTodos();
-    fetchEarthquakes(); // Llama a la función para obtener sismos
-  }, []);
-
-  // Configurar la suscripción para escuchar nuevos Todos en tiempo real
+  // Configurar suscripción para nuevos Todos en tiempo real
   useEffect(() => {
     const subscription = API.graphql(graphqlOperation(onCreateTodo)).subscribe({
       next: (eventData) => {
@@ -88,6 +65,29 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Llamar a las funciones fetch al cargar la app
+  useEffect(() => {
+    fetchTodos();
+    fetchEarthquakes();
+  }, []);
+
+  // Crear un elemento en la base de datos mediante API
+  const handleCreateItem = async () => {
+    const newItem = {
+      id: '456', // ID único para el nuevo ítem
+      municipio: 'Tlalpan',
+      magnitud: '5.0 grados',
+    };
+
+    try {
+      const response = await createItemDB(newItem);
+      Alert.alert('Elemento creado', JSON.stringify(response));
+    } catch (error) {
+      Alert.alert('Error al crear elemento', error.message);
+    }
+  };
+
+  // Renderizar pantalla de autenticación si el usuario no está autenticado
   if (!isAuthenticated) {
     return <AuthScreen />;
   }
@@ -109,14 +109,17 @@ export default function App() {
       </MapView>
       <Text>ESIME Culhuacán</Text>
 
-      {/* Muestra los datos de Todos */}
+      {/* Botón para crear un elemento */}
+      <Button title="Crear Elemento" onPress={handleCreateItem} />
+
+      {/* Mostrar datos de Todos */}
       <View>
         {todos.map((todo, index) => (
           <Text key={index}>{todo.name}</Text>
         ))}
       </View>
 
-      {/* Muestra los datos de sismos */}
+      {/* Mostrar datos de sismos */}
       <View>
         {earthquakes.map((quake, index) => (
           <Text key={index}>{quake.title} - {quake.date}</Text>
