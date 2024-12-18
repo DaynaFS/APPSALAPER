@@ -1,35 +1,33 @@
-// ssnFetchData.js
-import RSSParser from 'react-native-rss-parser';
+import axios from 'axios';
+import { parseStringPromise } from 'react-native-xml2js';
+import Constants from 'expo-constants';
 
-// Función para obtener y devolver los datos de SSN
 const fetchSSNData = async () => {
-  try {
-    // Obtiene el feed RSS desde la URL
-    const response = await fetch('http://www.ssn.unam.mx/rss/ultimos-sismos.xml');
-    const responseData = await response.text();
-    const feed = await RSSParser.parse(responseData);
-    
-    // Imprime la estructura del feed para verificar
-    console.log("Estructura del feed:", feed.items.slice(0, 3)); // Imprime los primeros 3 elementos para revisión
+  const ssnUrl = Constants.expoConfig.extra.SSN_RSS_URL; 
 
-    // Procesa los datos para devolver solo lo necesario
-    return feed.items.map(item => {
-      // Extrae la fecha y otros datos del elemento
-      const dateMatch = item.description ? item.description.match(/Fecha:(.*?)(\n|$)/) : null;
+  try {
+   
+    const response = await axios.get(ssnUrl);
+
+    const parsedData = await parseStringPromise(response.data);
+
+    const items = parsedData?.rss?.channel?.[0]?.item || [];
+    return items.map((item) => {
+      const contentSnippet = item.description?.[0] || 'Descripción no disponible';
+      const dateMatch = contentSnippet.match(/Fecha:(.*?)(\n|$)/);
       const date = dateMatch ? dateMatch[1].trim() : 'Fecha no disponible';
 
       return {
-        title: item.title || "Título no disponible",
-        date: date,
-        link: item.links?.[0]?.url || "Enlace no disponible",
-        description: item.description || "Descripción no disponible",
+        title: item.title?.[0] || 'Título no disponible',
+        date,
+        link: item.link?.[0] || 'Enlace no disponible',
+        description: contentSnippet,
       };
     });
   } catch (error) {
-    console.error('Error al obtener datos de SSN:', error);
-    return [];
+    console.error('Error al obtener datos del SSN:', error.message);
+    throw error;
   }
 };
 
-// Exporta la función para su uso en otros archivos
 export default fetchSSNData;

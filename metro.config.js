@@ -1,4 +1,5 @@
 const { getDefaultConfig } = require('expo/metro-config');
+const { mergeConfig } = require('@react-native/metro-config');
 const path = require('path');
 
 const defaultConfig = getDefaultConfig(__dirname);

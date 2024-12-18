@@ -1,0 +1,32 @@
+const jwt = require('jsonwebtoken');
+const jwksClient = require('jwks-rsa');
+const cognitoConfig = require('../config/cognitoConfig');
+
+const client = jwksClient({
+  jwksUri: `https://cognito-idp.${cognitoConfig.region}.amazonaws.com/${cognitoConfig.userPoolId}/.well-known/jwks.json`,
+});
+
+const getKey = (header, callback) => {
+  client.getSigningKey(header.kid, (err, key) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      const signingKey = key.getPublicKey();
+      callback(null, signingKey);
+    }
+  });
+};
+
+const validateJWT = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'No se proporcionó token' });
+
+  jwt.verify(token, getKey, { algorithms: ['RS256'] }, (err, decoded) => {
+    if (err) return res.status(401).json({ message: 'Token inválido' });
+
+    req.user = decoded;
+    next();
+  });
+};
+
+module.exports = validateJWT;
