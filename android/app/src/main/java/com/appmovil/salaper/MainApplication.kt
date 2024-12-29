@@ -3,6 +3,10 @@ package com.appmovil.salaper
 import android.app.Application
 import android.content.res.Configuration
 
+import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
+import com.google.firebase.FirebaseApp;
+
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
 
@@ -16,8 +20,11 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
 
 
-
 class MainApplication : Application(), ReactApplication {
+
+  companion object {
+    lateinit var pinpointManager: PinpointManager
+  }
 
   override val reactNativeHost: ReactNativeHost = ReactNativeHostWrapper(
         this,
@@ -42,6 +49,16 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
+
+    FirebaseApp.initializeApp(this)
+
+    val pinpointConfig = PinpointConfiguration(
+        applicationContext,
+        "7e4d77d4a3164e7db818fb20189bc1e6"
+        "us-east-1"
+    )
+    pinpointManager = PinpointManager(pinpointConfig)
+
     SoLoader.init(this, false)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.

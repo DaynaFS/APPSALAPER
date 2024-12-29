@@ -15,12 +15,14 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "hermes": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./frontend/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "hermes": true
       },
       "package": "com.appmovil.salaper",
       "versionCode": 5

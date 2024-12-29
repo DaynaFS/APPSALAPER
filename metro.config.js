@@ -27,4 +27,4 @@ defaultConfig.resolver.extraNodeModules = {
   src: path.resolve(__dirname, 'src'),
 };
 
-module.exports = defaultConfig;
+module.exports = getDefaultConfig(__dirname);

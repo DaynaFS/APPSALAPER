@@ -3,19 +3,54 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Alert, SafeAreaView, ScrollView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import awsconfig from '../aws-exports';
-import { listTodos } from '../src/graphql/queries';
-import { onCreateTodo } from '../src/graphql/subscriptions';
-import { createItemDB } from '../backend/services/apiserv';
-import AuthScreen from '../AuthScreen';
-import fetchSSNData from '../backend/services/ssnFetchData';
+import awsconfig from './aws-exports';
+import { listTodos } from './src/graphql/queries';
+import { onCreateTodo } from './src/graphql/subscriptions';
+import { createItemDB } from './backend/services/apiserv';
+import AuthScreen from './AuthScreen';
+import fetchSSNData from './backend/services/ssnFetchData';
+import { TailwindProvider } from 'nativewind';
+
+
 
 // Configurar Amplify
 try {
   Amplify.configure(awsconfig);
+  console.log('Amplify configurado correctamente');
 } catch (error) {
   console.error('Error al configurar Amplify:', error.message);
 }
+
+
+const sendNotification = async () => {
+  const notificationData = {
+    target: 'deviceTokenOEmail@example.com',
+    message: {
+      title: 'Nueva Notificación',
+      body: 'Este es el cuerpo de la notificación',
+    },
+  };
+
+  try {
+    const response = await fetch('http://<tu-backend-url>/api/notifications/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(notificationData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al enviar la notificación');
+    }
+
+    const result = await response.json();
+    Alert.alert('Notificación Enviada', JSON.stringify(result));
+  } catch (error) {
+    Alert.alert('Error', error.message);
+  }
+};
+
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -68,6 +103,9 @@ export default function App() {
     fetchTodos();
     fetchEarthquakes();
   }, []);
+
+
+
 
   const handleCreateItem = async () => {
     const newItem = {
@@ -128,6 +166,7 @@ export default function App() {
       </ScrollView>
 
       <Button title="Crear Elemento" onPress={handleCreateItem} />
+      <Button title="Enviar Notificación" onPress={sendNotification} />
       <StatusBar style="auto" />
     </SafeAreaView>
   );
