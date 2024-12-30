@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
+import 'react-native-reanimated';
+import { AppRegistry } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Alert, SafeAreaView, ScrollView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
