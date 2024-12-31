@@ -1,11 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
-import 'react-native-reanimated';
 import { AppRegistry } from 'react-native';
+import Amplify from 'aws-amplify';
+import awsconfig from './aws-exports';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
+import 'react-native-reanimated';
+import 'react-native-get-random-values';
+import 'react-native-url-polyfill/auto';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Alert, SafeAreaView, ScrollView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import awsconfig from './aws-exports';
 import { listTodos } from './src/graphql/queries';
 import { onCreateTodo } from './src/graphql/subscriptions';
 import { createItemDB } from './backend/services/apiserv';
@@ -15,9 +19,13 @@ import { TailwindProvider } from 'nativewind';
 
 
 
+
 // Configurar Amplify
 try {
-  Amplify.configure(awsconfig);
+  Amplify.configure({
+    ...awsconfig,
+    storage: AsyncStorage,
+  });
   console.log('Amplify configurado correctamente');
 } catch (error) {
   console.error('Error al configurar Amplify:', error.message);
@@ -26,15 +34,15 @@ try {
 
 const sendNotification = async () => {
   const notificationData = {
-    target: 'deviceTokenOEmail@example.com',
+    target: 'dayyfloressz.24@gmail.com',
     message: {
       title: 'Nueva Notificación',
-      body: 'Este es el cuerpo de la notificación',
+      body: 'SISMO EN CAMINO',
     },
   };
 
   try {
-    const response = await fetch('http://<tu-backend-url>/api/notifications/send', {
+    const response = await fetch('http://localhost:3000/api/notifications/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,9 +70,15 @@ export default function App() {
 
   // Verificar autenticación
   useEffect(() => {
-    Auth.currentAuthenticatedUser()
-      .then(() => setIsAuthenticated(true))
-      .catch(() => setIsAuthenticated(false));
+    const checkAuth = async () => {
+      try {
+        await Auth.currentAuthenticatedUser();
+        setIsAuthenticated(true);
+      } catch {
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuth();
   }, []);
 
   // Obtener lista de TODOs
@@ -112,8 +126,8 @@ export default function App() {
   const handleCreateItem = async () => {
     const newItem = {
       id: Date.now().toString(),
-      municipio: 'Tlalpan',
-      magnitud: '5.0 grados',
+      municipio: 'Coyoacan',
+      magnitud: '4. grados',
     };
 
     try {

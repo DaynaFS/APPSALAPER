@@ -3,11 +3,12 @@
     "name": "SalaperMovil",
     "slug": "SalaperMovil",
     "version": "52.0.0",
+    "newArchEnabled": true,
     "platforms": [
       "android"
     ],
     "orientation": "portrait",
-    "icon": "./frontend/assets/icon.png",
+    "icon": "./frontend/assets/LogoSALAPER.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./frontend/assets/splash.png",
