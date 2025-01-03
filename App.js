@@ -1,11 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { AppRegistry } from 'react-native';
-import Amplify from 'aws-amplify';
-import awsconfig from './aws-exports';
+import * as Amplify from 'aws-amplify';
+import awsmobile from './aws-exports';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import 'react-native-reanimated';
 import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
+import MapViewRoute from 'react-native-maps-routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Alert, SafeAreaView, ScrollView } from 'react-native';
@@ -17,21 +18,31 @@ import AuthScreen from './AuthScreen';
 import fetchSSNData from './backend/services/ssnFetchData';
 import { TailwindProvider } from 'nativewind';
 
+//const express = require('express');
+//const dotenv = require('dotenv');
+
+//const port = process.env.PORT || 3000;
 
 
+//app.use(express.json());
 
-// Configurar Amplify
+
+console.log('Amplify:', Amplify);
+console.log('awsmobile:', awsmobile);
+
+
+//configuracion Amplify
 try {
-  Amplify.configure({
-    ...awsconfig,
+  Amplify.default.configure({
+    ...awsmobile,
     storage: AsyncStorage,
   });
-  console.log('Amplify configurado correctamente');
+  console.log('Amplify configurado correctamente:', awsmobile);
 } catch (error) {
-  console.error('Error al configurar Amplify:', error.message);
+  console.error('ya quiero que quede pero error en amplify:', error.message);
 }
 
-
+//parte de las notificaciones pushhh
 const sendNotification = async () => {
   const notificationData = {
     target: 'dayyfloressz.24@gmail.com',
@@ -61,47 +72,51 @@ const sendNotification = async () => {
   }
 };
 
-
+//sismo
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [todos, setTodos] = useState([]);
   const [earthquakes, setEarthquakes] = useState([]);
   const mapRef = useRef(null);
 
-  // Verificar autenticación
+  //verificacion de la autenticación
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await Auth.currentAuthenticatedUser();
+        const user = await Auth.currentAuthenticatedUser();
         setIsAuthenticated(true);
+        console.log('Usuario autenticado:', user);
       } catch {
         setIsAuthenticated(false);
+        console.log('Usuario no autenticado, intente nuevamente');
       }
     };
     checkAuth();
   }, []);
 
-  // Obtener lista de TODOs
+  //lista de TODOs-objeto, verificacion api graphql
   const fetchTodos = async () => {
     try {
       const todoData = await API.graphql(graphqlOperation(listTodos));
+      console.log('Datos de TODOS obtenidos:', todoData);
       setTodos(todoData.data.listTodos.items);
     } catch (error) {
       console.error('Error al obtener TODOS:', error.message);
     }
   };
 
-  // Obtener datos de sismos del SSN
+  //datos del SSN
   const fetchEarthquakes = async () => {
     try {
       const data = await fetchSSNData();
+      console.log('Datos de el Sismo:', data);
       setEarthquakes(data);
     } catch (error) {
-      console.error('Error al obtener datos de sismos:', error.message);
+      console.error('Error al obtener datos de el sismo:', error.message);
     }
   };
 
-  // Suscripción en tiempo real
+  //llamada api en "tiempo real"-autenticacion
   useEffect(() => {
     const subscription = API.graphql(graphqlOperation(onCreateTodo)).subscribe({
       next: (eventData) => {
@@ -114,7 +129,7 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Cargar TODOS y datos de sismos al iniciar
+//app con la inicializacion de sismo
   useEffect(() => {
     fetchTodos();
     fetchEarthquakes();
@@ -138,7 +153,7 @@ export default function App() {
     }
   };
 
-  // Evitar mostrar la pantalla principal si no está autenticado
+  //si no está autenticado el usuario, pa fuera
   if (!isAuthenticated) {
     return <AuthScreen />;
   }

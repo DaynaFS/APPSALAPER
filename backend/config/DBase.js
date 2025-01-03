@@ -161,5 +161,5 @@ app.put("/users/:id", verifyCognitoToken, async (req, res) => {
 
 // Servidor escuchando en el puerto configurado
 app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+    console.log(`Servidor corriendo en http://localhost:3000`);
 });
